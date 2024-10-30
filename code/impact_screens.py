@@ -4,6 +4,7 @@ import os
 from button import Button
 from PIL import Image, ImageTk
 from workout_manager import Workout_manager
+from functools import partial
 
 cwd = os.getcwd()
 wm = Workout_manager()
@@ -16,9 +17,9 @@ def get_image(location):
     return ImageTk.PhotoImage(image)
 
 def set_image(image_holder: tk.Label, image: tk.PhotoImage):
-    image_holder.pack_forget()
+    #image_holder.pack_forget()
     image_holder.config(image=image)
-    image_holder.pack()
+    #image_holder.pack()
 
 class main_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
@@ -43,6 +44,8 @@ class main_screen:
 
     def prepare(self):
         wm.set_mode(wm.TRAINING)
+	#set_image(self.holder, self.images["training"])
+	#self.root.after(100, partial(self.run, None))
 
     def run(self, press_event: tk.Event):
         if self.curr_image is None: set_image(self.holder, self.images["training"])
@@ -95,7 +98,7 @@ class round_setup_screen:
     def prepare(self):
         set_image(self.holder, self.images["beginner"])
         wm.set_round_difficulty(wm.BEGINNER)
-
+	
     def run(self, press_event: tk.Event):
         # check whether buttons have been pressed
         if press_event is not None: 
