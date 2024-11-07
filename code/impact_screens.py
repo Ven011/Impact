@@ -17,9 +17,7 @@ def get_image(location):
     return ImageTk.PhotoImage(image)
 
 def set_image(image_holder: tk.Label, image: tk.PhotoImage):
-    #image_holder.pack_forget()
     image_holder.config(image=image)
-    #image_holder.pack()
 
 class main_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
@@ -44,8 +42,6 @@ class main_screen:
 
     def prepare(self):
         wm.set_mode(wm.TRAINING)
-	#set_image(self.holder, self.images["training"])
-	#self.root.after(100, partial(self.run, None))
 
     def run(self, press_event: tk.Event):
         if self.curr_image is None: set_image(self.holder, self.images["training"])
@@ -282,6 +278,11 @@ class workout_screen:
         # run workout timer
         self.timer.config(text=wm.get_time_left())
         self.timer.place(relx=0.5, rely=0.68, anchor="center") if self.curr_image else 0
+        
+        # update landed and taken punches
+        self.landed.config(text=wm.get_landed())
+        self.taken.config(text=wm.get_taken())
+        
 
     def pause_action(self):
         # pause workout timer
