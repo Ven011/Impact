@@ -37,7 +37,7 @@ class Workout_manager:
 		self.paused = True
 		self.punches_landed = 0
 		self.punches_taken = 0
-		self.combo = [1, 0, 0, 0] # indicated bags/pads that need to be hit (0 = no, 1 = yes)
+		self.combo = [0, 0, 0, 0] # indicated bags/pads that need to be hit (0 = no, 1 = yes)
 
 		self.workout_thread = threading.Thread(target = self.run_workout)
 		self.workout_thread.start()
@@ -130,11 +130,12 @@ class Workout_manager:
 			self.cm.close()
 			
 	def check_punch_results(self):
-		self.punches_landed += sum(self.cm.hit_status)
-		self.punches_taken += sum(self.combo) - sum(self.cm.hit_status)
+		if not self.paused:
+			self.punches_landed += sum(self.cm.hit_status[1:5])
+			self.punches_taken += sum(self.combo[1:5]) - sum(self.cm.hit_status[1:5])
         
 	def send_punch(self):
-		self.combo = [1, 0, 0, 0]
+		self.combo = [0, 0, 0, 0]
 
 		# determine what pads to send punches
 		if self.selected_mode is self.TRAINING:
