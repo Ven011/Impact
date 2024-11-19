@@ -27,7 +27,7 @@ class Workout_manager:
 
 		# number of punches for each mode
 		self.training_punches = list(range(10, 101, 10))
-		self.rounds_punches = list(range(25, 201, 25))
+		self.rounds_punches = list(range(5, 201, 25))
 		self.punches_cursor = 0
 
 		# workout variables
@@ -37,6 +37,7 @@ class Workout_manager:
 		self.paused = True
 		self.punches_landed = 0
 		self.punches_taken = 0
+		self.punches_reached = False
 		self.combo = [0, 0, 0, 0] # indicated bags/pads that need to be hit (0 = no, 1 = yes)
 
 		self.workout_thread = threading.Thread(target = self.run_workout)
@@ -85,7 +86,7 @@ class Workout_manager:
 			return self.selected_difficulty
 
 	def init_workout(self):
-		self.time_left = self.get_punches_value() * 4
+		self.time_left = self.get_punches_value() * 10
 
 	def pause_workout(self):
 		self.paused = True
@@ -99,12 +100,13 @@ class Workout_manager:
 		# reset punches landed and taken
 		self.punches_landed = 0
 		self.punches_taken = 0
+		self.punches_reached = False
 
 	def get_time_left(self):
 		if not self.paused and (time() - self.init_time) >= 1:
 			self.time_left -= 1 if self.time_left - 1 >= 0 else 0
 			self.init_time = time()
-		return self.time_left
+		return self.time_left if not self.punches_reached else 0
         
 	def get_landed(self):
 		return self.punches_landed
@@ -117,11 +119,13 @@ class Workout_manager:
 			while True:
 				# send punches every 4 seconds if the workout has been started
 				time_left = self.get_time_left()
-				if not self.paused and time_left > 0:
+				if not self.paused and time_left > 0 and not self.punches_reached:
 					if time_left % 4 == 0:
 						self.send_punch()
 						sleep(3.75)
 						self.check_punch_results()
+						# wait 2 seconds before sending any other punches
+						sleep(2)
 				
 		except Exception as e:
 			print(f"Error in workout thread: {e}")
@@ -133,6 +137,7 @@ class Workout_manager:
 		if not self.paused:
 			self.punches_landed += sum(self.cm.hit_status[1:5])
 			self.punches_taken += sum(self.combo[1:5]) - sum(self.cm.hit_status[1:5])
+			self.punches_reached = True if self.punches_landed == self.get_punches_value() else False
         
 	def send_punch(self):
 		self.combo = [0, 0, 0, 0]
