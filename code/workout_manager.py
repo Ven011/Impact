@@ -27,7 +27,7 @@ class Workout_manager:
 
 		# number of punches for each mode
 		self.training_punches = list(range(10, 101, 10))
-		self.rounds_punches = list(range(5, 201, 25))
+		self.rounds_punches = list(range(25, 201, 25))
 		self.punches_cursor = 0
 
 		# workout variables
@@ -86,10 +86,12 @@ class Workout_manager:
 			return self.selected_difficulty
 
 	def init_workout(self):
-		self.time_left = self.get_punches_value() * 10
+		self.time_left = self.get_punches_value()
 
 	def pause_workout(self):
 		self.paused = True
+		# turn off pads
+		self.cm.set_pads(*[self.cm.BLACK]*4)
         
 	def resume_workout(self):
 		self.paused = False
@@ -101,6 +103,8 @@ class Workout_manager:
 		self.punches_landed = 0
 		self.punches_taken = 0
 		self.punches_reached = False
+		# turn off pads
+		self.cm.set_pads(*[self.cm.BLACK]*4)
 
 	def get_time_left(self):
 		if not self.paused and (time() - self.init_time) >= 1:
@@ -118,14 +122,12 @@ class Workout_manager:
 		try:
 			while True:
 				# send punches every 4 seconds if the workout has been started
-				time_left = self.get_time_left()
-				if not self.paused and time_left > 0 and not self.punches_reached:
-					if time_left % 4 == 0:
-						self.send_punch()
-						sleep(3.75)
-						self.check_punch_results()
-						# wait 2 seconds before sending any other punches
-						sleep(2)
+				if not self.paused and not self.punches_reached:
+					self.send_punch()
+					sleep(3.75)
+					self.check_punch_results()
+					# wait 2 seconds before sending any other punches
+					sleep(2)
 				
 		except Exception as e:
 			print(f"Error in workout thread: {e}")

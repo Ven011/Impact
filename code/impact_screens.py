@@ -120,27 +120,27 @@ class round_setup_screen:
         self.curr_image = None
 
     def go_action(self):
-        self.set_screen("duration_setup")
+        self.set_screen("punches_setup")
         self.curr_image = None
 
 class punches_setup_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
         global cwd
-        self.name = "duration_setup"
+        self.name = "punches_setup"
         self.root = root
         self.holder = screen_holder
         self.set_screen = set_screen_function
-        self.duration = tk.Label(root, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="#4c494b")
+        self.punches = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="#4c494b")
 
         self.curr_image = None
         self.entered_screen = False
         
         self.images = {
-            "duration": get_image(f"{cwd}/screens/7.png")
+            "punches": get_image(f"{cwd}/screens/7.png")
         }
 
         self.buttons = [
-            Button(self.name, "duration_go", 601, 71, 794, 183, self.go_action),
+            Button(self.name, "punches_go", 601, 71, 794, 183, self.go_action),
             Button(self.name, "add_time", 584, 289, 690, 424, self.add_time_action),
             Button(self.name, "remove_time", 113, 290, 214, 420, self.remove_time_action),
             Button(self.name, "home", 18, 403, 69, 457, self.home_action),
@@ -149,10 +149,10 @@ class punches_setup_screen:
     def prepare(self):
         wm.reset_punches_cursor()
 
-        # prepare duration value text
-        self.duration.config(text=wm.get_punches_value())
-        self.duration.place(relx=0.5, rely=0.75, anchor="center")
-        set_image(self.holder, self.images["duration"])
+        # prepare punches value text
+        self.punches.config(text=wm.get_punches_value())
+        self.punches.place(relx=0.5, rely=0.75, anchor="center")
+        set_image(self.holder, self.images["punches"])
 
     def run(self, press_event: tk.Event):
         # check whether buttons have been pressed
@@ -162,22 +162,22 @@ class punches_setup_screen:
     def go_action(self):
         self.set_screen("workout")
         self.curr_image = None
-        self.duration.place_forget()
+        self.punches.place_forget()
 
     def add_time_action(self):
         wm.increment_punches()
-        self.duration.config(text=wm.get_punches_value())
-        self.duration.place(relx=0.5, rely=0.75, anchor="center")
+        self.punches.config(text=wm.get_punches_value())
+        self.punches.place(relx=0.5, rely=0.75, anchor="center")
 
     def remove_time_action(self):
         wm.decrement_punches()
-        self.duration.config(text=wm.get_punches_value())
-        self.duration.place(relx=0.5, rely=0.75, anchor="center")
+        self.punches.config(text=wm.get_punches_value())
+        self.punches.place(relx=0.5, rely=0.75, anchor="center")
 
     def home_action(self):
         self.set_screen("main")
         self.curr_image = None
-        self.duration.place_forget()
+        self.punches.place_forget()
 
 class training_setup_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
@@ -212,7 +212,7 @@ class training_setup_screen:
             for button in self.buttons: button.check_if_pressed(press_x=press_event.x, press_y=press_event.y)
 
     def go_action(self):
-        self.set_screen("duration_setup")
+        self.set_screen("punches_setup")
         self.curr_image = None
 
     def right_option_action(self):
@@ -236,9 +236,9 @@ class workout_screen:
         self.set_screen = set_screen_function
 
         # screen variable values
-        self.timer = tk.Label(root, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
-        self.landed = tk.Label(root, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="#4c494b")
-        self.taken = tk.Label(root, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="#4c494b")
+        self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
+        self.landed = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="#4c494b")
+        self.taken = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="#4c494b")
 
         self.curr_image = None
         
@@ -258,11 +258,11 @@ class workout_screen:
     def prepare(self):
         set_image(self.holder, self.images[wm.get_workout()])
 
-        # start workout timer
+        # start workout
         wm.init_workout()
 
-        self.timer.config(text=wm.get_time_left())
-        self.timer.place(relx=0.5, rely=0.68, anchor="center")
+        self.target.config(text=wm.get_punches_value())
+        self.target.place(relx=0.5, rely=0.68, anchor="center")
 
         self.landed.config(text=wm.get_landed())
         self.landed.place(relx=0.105, rely=0.315, anchor="center")
@@ -275,25 +275,24 @@ class workout_screen:
         if press_event is not None: 
             for button in self.buttons: button.check_if_pressed(press_x=press_event.x, press_y=press_event.y)
 
-        # run workout timer
-        self.timer.config(text=wm.get_time_left())
-        self.timer.place(relx=0.5, rely=0.68, anchor="center") if self.curr_image else 0
+        # display target punches
+        self.target.config(text=wm.get_punches_value())
+        self.target.place(relx=0.5, rely=0.68, anchor="center") if self.curr_image else 0
         
         # update landed and taken punches
         self.landed.config(text=wm.get_landed())
         self.taken.config(text=wm.get_taken())
-        
 
     def pause_action(self):
-        # pause workout timer
+        # pause workout
         wm.pause_workout()
 
     def play_action(self):
-        # resume workout timer if paused
+        # resume workout if paused
         wm.resume_workout()
 
     def home_action(self):
-        self.timer.place_forget()
+        self.target.place_forget()
         self.taken.place_forget()
         self.landed.place_forget()
 
@@ -309,7 +308,7 @@ class screen_manager:
         self.screens = {
             "main": main_screen(self.root, self.holder, self.set_screen),
             "round_setup": round_setup_screen(self.root, self.holder, self.set_screen),
-            "duration_setup": punches_setup_screen(self.root, self.holder, self.set_screen),
+            "punches_setup": punches_setup_screen(self.root, self.holder, self.set_screen),
             "training_setup": training_setup_screen(self.root, self.holder, self.set_screen),
             "workout": workout_screen(self.root, self.holder, self.set_screen)
         }

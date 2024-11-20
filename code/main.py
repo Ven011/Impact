@@ -6,6 +6,7 @@ from time import sleep
 
 root = tk.Tk()
 root.geometry("800x480")
+root.attributes("-fullscreen", True)
 root.configure(bg="black")
 
 # screen image holder
