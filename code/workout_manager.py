@@ -124,9 +124,9 @@ class Workout_manager:
 				# send punches every 4 seconds if the workout has been started
 				if not self.paused and not self.punches_reached:
 					self.send_punch()
-					sleep(3.75)
+					sleep(4.1)
 					self.check_punch_results()
-					# wait 2 seconds before sending any other punches
+					# 2 second break before next round
 					sleep(2)
 				
 		except Exception as e:
@@ -137,8 +137,8 @@ class Workout_manager:
 			
 	def check_punch_results(self):
 		if not self.paused:
-			self.punches_landed += sum(self.cm.hit_status[1:5])
-			self.punches_taken += sum(self.combo[1:5]) - sum(self.cm.hit_status[1:5])
+			self.punches_landed += sum(self.cm.hit_status[0:4])
+			self.punches_taken += sum(self.combo[0:4]) - sum(self.cm.hit_status[0:4])
 			self.punches_reached = True if self.punches_landed == self.get_punches_value() else False
         
 	def send_punch(self):

@@ -4,6 +4,9 @@ import os
 from impact_screens import screen_manager, set_image, get_image
 from time import sleep
 
+# delay to allow graphical target to get up
+sleep(5)
+
 root = tk.Tk()
 root.geometry("800x480")
 root.attributes("-fullscreen", True)
