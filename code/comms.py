@@ -16,7 +16,7 @@ from serial import Serial
 from time import sleep
 
 class Comms_manager:
-	def __init__(self, port = "/dev/ttyUSB0", baudrate = 9600):
+	def __init__(self, port = "/dev/ttyACM0", baudrate = 9600):
 		self.ser = Serial(port, baudrate)
 		 
 		self.GREEN = 'G'
@@ -29,7 +29,11 @@ class Comms_manager:
 		
 		# open serial port if not already open
 		if not self.ser.is_open:
-			self.ser.open()
+			try:
+				self.ser.open()
+			except Exception as e:
+				print(e)
+		
 		
 		# message monitoring thread
 		self.monitor = threading.Thread(target=self.message_monitoring)
