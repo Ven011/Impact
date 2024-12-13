@@ -16,7 +16,7 @@ from serial import Serial
 from time import sleep
 
 class Comms_manager:
-	def __init__(self, port = "/dev/ttyACM0", baudrate = 9600):
+	def __init__(self, port = "/dev/ttyUSB0", baudrate = 9600):
 		self.ser = Serial(port, baudrate)
 		 
 		self.GREEN = 'G'
