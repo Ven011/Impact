@@ -6,6 +6,7 @@ sudo apt-get upgrade -y
 sudo apt-get install -y python3-tk
 pip3 install pyserial
 pip3 install pillow
+sudo apt-get install python3-pil.imagetk
 #pip3 install functools
 
 
