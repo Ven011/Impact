@@ -4,8 +4,6 @@ After=graphical.target
 Required=graphical.target
 
 [Service]
-Environment="DISPLAY=:0"
-Environment="XAUTHORITY=/home/raspberrypi/.Xauthority"
 WorkingDirectory=/home/raspberrypi/Impact
 ExecStart=/usr/bin/python3 /home/raspberrypi/Impact/code/main.py
 User=raspberrypi
