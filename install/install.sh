@@ -17,14 +17,17 @@ sudo systemctl enable Impact.service
 # setup silent boot
 sudo systemctl mask plymouth-start.service
 
-sudo rm /boot/cmdline.txt
-sudo cp cmdline.txt /boot
+# Start the application
+sudo systemctl start Impact.service
 
-sudo rm /boot/config.txt
-sudo cp config.txt /boot
+#sudo rm /boot/cmdline.txt
+#sudo cp cmdline.txt /boot
 
-sudo rm /etc/xdg/lxsession/LXDE-pi/autostart
-sudo cp autostart /etc/xdg/lxsession/LXDE-pi/
+#sudo rm /boot/config.txt
+#sudo cp config.txt /boot
+
+#sudo rm /etc/xdg/lxsession/LXDE-pi/autostart
+#sudo cp autostart /etc/xdg/lxsession/LXDE-pi/
 
 # reboot pi
-sudo reboot
+#sudo reboot
