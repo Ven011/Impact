@@ -4,9 +4,11 @@ After=graphical.target
 Required=graphical.target
 
 [Service]
-WorkingDirectory=/home/raspberrypi/Impact
-ExecStart=/usr/bin/python3 /home/raspberrypi/Impact/code/main.py
-User=raspberrypi
+Environment="DISPLAY=:0"
+Environment="XAUTHORITY=/home/impact50-0/.Xauthority"
+WorkingDirectory=/home/impact50-0/Impact
+ExecStart=/usr/bin/python3 /home/impact50-0/Impact/code/main.py
+User=impact50-0
 
 [Install]
 WantedBy=graphical.target
