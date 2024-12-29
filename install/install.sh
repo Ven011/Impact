@@ -20,12 +20,6 @@ sudo systemctl mask plymouth-start.service
 # Start the application
 sudo systemctl start Impact.service
 
-#sudo rm /boot/cmdline.txt
-#sudo cp cmdline.txt /boot
-
-#sudo rm /boot/config.txt
-#sudo cp config.txt /boot
-
 #sudo rm /etc/xdg/lxsession/LXDE-pi/autostart
 #sudo cp autostart /etc/xdg/lxsession/LXDE-pi/
 
