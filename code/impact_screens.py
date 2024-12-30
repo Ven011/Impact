@@ -176,9 +176,9 @@ class punches_setup_screen:
         self.punches.place(relx=0.5, rely=0.75, anchor="center")
 
     def home_action(self):
-        self.set_screen("main")
         self.curr_image = None
         self.punches.place_forget()
+        self.set_screen("main")
 
 class training_setup_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
@@ -348,10 +348,10 @@ class workout_start_screen:
 
         # exit the screen after the display time has passed
         if time() - self.display_start_time >= self.display_time:
-            self.set_screen("workout")
             self.curr_image = None
             self.target.place_forget()
             self.time.place_forget()
+            self.set_screen("workout")
 
         # update the countdown time
         if time() - self.prev_time >= 1:
@@ -404,7 +404,7 @@ class workout_end_screen:
             self.curr_image = None
             self.target.place_forget()
             self.landed.place_forget()
-		self.set_screen("main")
+            self.set_screen("main")
 
 class screen_manager:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label):
