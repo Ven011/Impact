@@ -338,10 +338,10 @@ class workout_start_screen:
         set_image(self.holder, self.images["workout_start_screen"])
 
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.25, rely=0.7, anchor="center")
+        self.target.place(relx=0.29, rely=0.56, anchor="center")
 
         self.time.config(text=self.display_time)
-        self.time.place(relx=0.75, rely=0.5, anchor="center")
+        self.time.place(relx=0.72, rely=0.56, anchor="center")
 
     def run(self, press_event: tk.Event):
         _ = press_event
@@ -359,7 +359,7 @@ class workout_start_screen:
             self.prev_time = time()
             time_left = self.display_time - self.display_elapsed_time
             self.time.config(text=time_left)
-            self.time.place(relx=0.7, rely=0.6, anchor="center")
+            self.time.place(relx=0.72, rely=0.56, anchor="center")
 
 class workout_end_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
@@ -390,10 +390,10 @@ class workout_end_screen:
         set_image(self.holder, self.images["workout_end_screen"])
 
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.25, rely=0.7, anchor="center")
+        self.target.place(relx=0.29, rely=0.56, anchor="center")
 
         self.landed.config(text=wm.get_landed())
-        self.landed.place(relx=0.75, rely=0.5, anchor="center")
+        self.landed.place(relx=0.72, rely=0.56, anchor="center")
 
     def run(self, press_event: tk.Event):
         _ = press_event
@@ -401,10 +401,10 @@ class workout_end_screen:
         # exit the screen after the display time has passed
         if time() - self.display_start_time >= self.display_time:
             wm.reset_variables()
-            self.set_screen("main")
             self.curr_image = None
             self.target.place_forget()
             self.landed.place_forget()
+		self.set_screen("main")
 
 class screen_manager:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label):
