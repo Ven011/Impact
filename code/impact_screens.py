@@ -310,8 +310,8 @@ class workout_start_screen:
         self.set_screen = set_screen_function
 
         # screen variable values
-        self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="white")
-        self.time = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="white")
+        self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
+        self.time = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="black")
         self.display_start_time = 0
         self.display_time = 120 # number of seconds to show the screen
         self.display_elapsed_time = 0
@@ -364,8 +364,8 @@ class workout_end_screen:
         self.set_screen = set_screen_function
 
         # screen variable values
-        self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="white")
-        self.landed = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="white")
+        self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
+        self.landed = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="black")
         self.display_start_time = 0
         self.display_time = 10 # number of seconds to show the screen
 
