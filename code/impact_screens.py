@@ -5,6 +5,7 @@ from button import Button
 from PIL import Image, ImageTk
 from workout_manager import Workout_manager
 from functools import partial
+from time import time()
 
 cwd = os.getcwd()
 wm = Workout_manager()
@@ -160,7 +161,7 @@ class punches_setup_screen:
             for button in self.buttons: button.check_if_pressed(press_x=press_event.x, press_y=press_event.y)
 
     def go_action(self):
-        self.set_screen("workout")
+        self.set_screen("workout_start")
         self.curr_image = None
         self.punches.place_forget()
 
@@ -296,9 +297,106 @@ class workout_screen:
         self.taken.place_forget()
         self.landed.place_forget()
 
-        self.set_screen("main")
+        self.set_screen("workout_end")
         self.curr_image = None
         wm.end_workout()
+
+class workout_start_screen:
+    def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
+        global cwd
+        self.name = "workout_start"
+        self.root = root
+        self.holder = screen_holder
+        self.set_screen = set_screen_function
+
+        # screen variable values
+        self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="white")
+        self.time = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="white")
+        self.display_start_time = 0
+        self.display_time = 120 # number of seconds to show the screen
+        self.display_elapsed_time = 0
+        self.prev_time = 0
+
+        self.curr_image = None
+        
+        self.images = {
+            "workout_start_screen": get_image(f"{cwd}/screens/16.png")
+        }
+
+        self.buttons = [] # no buttons in this screen
+
+    def prepare(self):
+        # initialize screen variables
+        self.display_elapsed_time = 0
+        self.display_start_time = time()
+        self.prev_time = self.display_start_time
+
+        set_image(self.holder, self.images["workout_start_screen"])
+
+        self.target.config(text=wm.get_punches_value())
+        self.target.place(relx=0.3, rely=0.6, anchor="center")
+
+        self.time.config(text=self.display_time)
+        self.time.place(relx=0.7, rely=0.6, anchor="center")
+
+    def run(self, press_event: tk.Event):
+        _ = press_event
+
+        # exit the screen after the display time has passed
+        if time() - self.display_start_time >= self.display_time:
+            self.set_screen("workout")
+            self.curr_image = None
+
+        # update the countdown time
+        if time() - self.prev_time >= 1:
+            self.display_elapsed_time += 1
+            self.prev_time = time()
+            time_left = self.display_time - self.display_elapsed_time
+            self.time.config(text=time_left)
+            self.time.place(relx=0.7, rely=0.6, anchor="center")
+
+class workout_end_screen:
+    def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
+        global cwd
+        self.name = "main"
+        self.root = root
+        self.holder = screen_holder
+        self.set_screen = set_screen_function
+
+        # screen variable values
+        self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="white")
+        self.landed = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="white")
+        self.display_start_time = 0
+        self.display_time = 10 # number of seconds to show the screen
+
+        self.curr_image = None
+        
+        self.images = {
+            "workout_end_screen": get_image(f"{cwd}/screens/17.png")
+        }
+
+        self.buttons = [] # no buttons in this screen
+
+    def prepare(self):
+        # initialize screen variables
+        self.display_start_time = time()
+
+        set_image(self.holder, self.images["workout_end_screen"])
+
+        self.target.config(text=wm.get_punches_value())
+        self.target.place(relx=0.3, rely=0.6, anchor="center")
+
+        self.landed.config(text=wm.get_landed())
+        self.landed.place(relx=0.7, rely=0.6, anchor="center")
+
+    def run(self, press_event: tk.Event):
+        _ = press_event
+
+        # exit the screen after the display time has passed
+        if time() - self.display_start_time >= self.display_time:
+            wm.reset_variables()
+            self.set_screen("main")
+            self.curr_image = None
 
 class screen_manager:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label):
@@ -310,7 +408,9 @@ class screen_manager:
             "round_setup": round_setup_screen(self.root, self.holder, self.set_screen),
             "punches_setup": punches_setup_screen(self.root, self.holder, self.set_screen),
             "training_setup": training_setup_screen(self.root, self.holder, self.set_screen),
-            "workout": workout_screen(self.root, self.holder, self.set_screen)
+            "workout": workout_screen(self.root, self.holder, self.set_screen),
+            "workout_start": workout_start_screen(self.root, self.holder, self.set_screen),
+            "workout_end": workout_end_screen(self.root, self.holder, self.set_screen)
         }
         self.curr_screen = "main"
         self.press_event = None
