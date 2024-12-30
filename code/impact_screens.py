@@ -346,6 +346,8 @@ class workout_start_screen:
         if time() - self.display_start_time >= self.display_time:
             self.set_screen("workout")
             self.curr_image = None
+            self.target.place_forget()
+            self.time.place_forget()
 
         # update the countdown time
         if time() - self.prev_time >= 1:
@@ -397,6 +399,8 @@ class workout_end_screen:
             wm.reset_variables()
             self.set_screen("main")
             self.curr_image = None
+            self.target.place_forget()
+            self.landed.place_forget()
 
 class screen_manager:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label):
