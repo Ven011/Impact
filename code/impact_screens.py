@@ -5,7 +5,7 @@ from button import Button
 from PIL import Image, ImageTk
 from workout_manager import Workout_manager
 from functools import partial
-from time import time()
+from time import time
 
 cwd = os.getcwd()
 wm = Workout_manager()
