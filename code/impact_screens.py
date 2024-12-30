@@ -284,6 +284,10 @@ class workout_screen:
         self.landed.config(text=wm.get_landed())
         self.taken.config(text=wm.get_taken())
 
+        # end workout if total sent punches is equal to the target punches
+        if (wm.get_landed() + wm.get_taken()) >= wm.get_punches_value():
+            self.home_action()
+
     def pause_action(self):
         # pause workout
         wm.pause_workout()
@@ -311,9 +315,9 @@ class workout_start_screen:
 
         # screen variable values
         self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
-        self.time = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="black")
+        self.time = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
         self.display_start_time = 0
-        self.display_time = 120 # number of seconds to show the screen
+        self.display_time = 60 # number of seconds to show the screen
         self.display_elapsed_time = 0
         self.prev_time = 0
 
@@ -334,10 +338,10 @@ class workout_start_screen:
         set_image(self.holder, self.images["workout_start_screen"])
 
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.3, rely=0.6, anchor="center")
+        self.target.place(relx=0.25, rely=0.7, anchor="center")
 
         self.time.config(text=self.display_time)
-        self.time.place(relx=0.7, rely=0.6, anchor="center")
+        self.time.place(relx=0.75, rely=0.5, anchor="center")
 
     def run(self, press_event: tk.Event):
         _ = press_event
@@ -360,14 +364,14 @@ class workout_start_screen:
 class workout_end_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
         global cwd
-        self.name = "main"
+        self.name = "workout_end"
         self.root = root
         self.holder = screen_holder
         self.set_screen = set_screen_function
 
         # screen variable values
         self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
-        self.landed = tk.Label(self.holder, font=("Helvetica", 50, "bold"), anchor="center", fg="white", bg="black")
+        self.landed = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
         self.display_start_time = 0
         self.display_time = 10 # number of seconds to show the screen
 
@@ -386,10 +390,10 @@ class workout_end_screen:
         set_image(self.holder, self.images["workout_end_screen"])
 
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.3, rely=0.6, anchor="center")
+        self.target.place(relx=0.25, rely=0.7, anchor="center")
 
         self.landed.config(text=wm.get_landed())
-        self.landed.place(relx=0.7, rely=0.6, anchor="center")
+        self.landed.place(relx=0.75, rely=0.5, anchor="center")
 
     def run(self, press_event: tk.Event):
         _ = press_event
