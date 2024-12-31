@@ -271,9 +271,12 @@ class workout_screen:
         self.taken.config(text=wm.get_taken())
         self.taken.place(relx=0.105, rely=0.79, anchor="center")
 
+	# automatically start the workout
+	self.play_action()
+
     def run(self, press_event: tk.Event):
         # check whether buttons have been pressed
-        if press_event is not None: 
+        if press_event is not None:
             for button in self.buttons: button.check_if_pressed(press_x=press_event.x, press_y=press_event.y)
 
         # display target punches
