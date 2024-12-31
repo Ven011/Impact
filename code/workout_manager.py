@@ -27,7 +27,7 @@ class Workout_manager:
 
 		# number of punches for each mode
 		self.training_punches = list(range(10, 101, 10))
-		self.rounds_punches = list(range(25, 201, 25))
+		self.rounds_punches = list(range(0, 201, 25))
 		self.punches_cursor = 0
 
 		# workout variables
@@ -100,11 +100,13 @@ class Workout_manager:
 	def end_workout(self):
 		self.paused = True
 		# reset punches landed and taken
-		self.punches_landed = 0
-		self.punches_taken = 0
 		self.punches_reached = False
 		# turn off pads
 		self.cm.set_pads(*[self.cm.BLACK]*4)
+
+	def reset_variables(self):
+		self.punches_landed = 0
+		self.punches_taken = 0
 
 	def get_time_left(self):
 		if not self.paused and (time() - self.init_time) >= 1:
@@ -139,7 +141,7 @@ class Workout_manager:
 		if not self.paused:
 			self.punches_landed += sum(self.cm.hit_status[0:4])
 			self.punches_taken += sum(self.combo[0:4]) - sum(self.cm.hit_status[0:4])
-			self.punches_reached = True if (self.punches_landed + self.punches_taken - 1) >= self.get_punches_value() else False
+			self.punches_reached = True if (self.punches_landed + self.punches_taken) >= self.get_punches_value() else False
         
 	def send_punch(self):
 		self.combo = [0, 0, 0, 0]
