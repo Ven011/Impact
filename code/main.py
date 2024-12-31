@@ -9,7 +9,7 @@ sleep(5)
 
 root = tk.Tk()
 root.geometry("800x480")
-#root.attributes("-fullscreen", True)
+root.attributes("-fullscreen", True)
 root.configure(bg="black")
 
 # screen image holder
