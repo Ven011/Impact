@@ -27,7 +27,7 @@ class Workout_manager:
 
 		# number of punches for each mode
 		self.training_punches = list(range(10, 101, 10))
-		self.rounds_punches = list(range(0, 201, 25))
+		self.rounds_punches = list(range(25, 201, 25))
 		self.punches_cursor = 0
 
 		# workout variables
