@@ -272,7 +272,7 @@ class workout_screen:
         self.taken.place(relx=0.105, rely=0.79, anchor="center")
 
 	# automatically start the workout
-	    self.play_action()
+        self.play_action()
 
     def run(self, press_event: tk.Event):
         # check whether buttons have been pressed
