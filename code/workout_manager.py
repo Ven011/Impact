@@ -140,7 +140,7 @@ class Workout_manager:
 	def check_punch_results(self):
 		if not self.paused:
 			self.punches_landed += sum(self.cm.hit_status[0:4])
-			self.punches_taken += sum(self.combo[0:4]) - sum(self.cm.hit_status[0:4])
+			self.punches_taken += abs(sum(self.combo[0:4]) - sum(self.cm.hit_status[0:4]))
 			self.punches_reached = True if (self.punches_landed + self.punches_taken) >= self.get_punches_value() else False
         
 	def send_punch(self):
