@@ -263,10 +263,10 @@ class workout_screen:
         wm.init_workout()
 
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.5, rely=0.68, anchor="center")
+        self.target.place(relx=0.5, rely=0.69, anchor="center")
 
         self.landed.config(text=wm.get_landed())
-        self.landed.place(relx=0.105, rely=0.315, anchor="center")
+        self.landed.place(relx=0.105, rely=0.325, anchor="center")
 
         self.taken.config(text=wm.get_taken())
         self.taken.place(relx=0.105, rely=0.79, anchor="center")
@@ -278,7 +278,7 @@ class workout_screen:
 
         # display target punches
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.5, rely=0.68, anchor="center") if self.curr_image else 0
+        self.target.place(relx=0.5, rely=0.69, anchor="center") if self.curr_image else 0
         
         # update landed and taken punches
         self.landed.config(text=wm.get_landed())
@@ -338,10 +338,10 @@ class workout_start_screen:
         set_image(self.holder, self.images["workout_start_screen"])
 
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.29, rely=0.56, anchor="center")
+        self.target.place(relx=0.29, rely=0.60, anchor="center")
 
         self.time.config(text=self.display_time)
-        self.time.place(relx=0.72, rely=0.56, anchor="center")
+        self.time.place(relx=0.71, rely=0.57, anchor="center")
 
     def run(self, press_event: tk.Event):
         _ = press_event
@@ -359,7 +359,7 @@ class workout_start_screen:
             self.prev_time = time()
             time_left = self.display_time - self.display_elapsed_time
             self.time.config(text=time_left)
-            self.time.place(relx=0.72, rely=0.56, anchor="center")
+            self.time.place(relx=0.71, rely=0.57, anchor="center")
 
 class workout_end_screen:
     def __init__(self, root: tk.Tk, screen_holder: tk.Label, set_screen_function):
@@ -390,10 +390,10 @@ class workout_end_screen:
         set_image(self.holder, self.images["workout_end_screen"])
 
         self.target.config(text=wm.get_punches_value())
-        self.target.place(relx=0.29, rely=0.56, anchor="center")
+        self.target.place(relx=0.29, rely=0.60, anchor="center")
 
         self.landed.config(text=wm.get_landed())
-        self.landed.place(relx=0.72, rely=0.56, anchor="center")
+        self.landed.place(relx=0.71, rely=0.57, anchor="center")
 
     def run(self, press_event: tk.Event):
         _ = press_event
