@@ -162,32 +162,52 @@ class Workout_manager:
 				target_bag = [0, 3][randint(0, 1)]
 			elif self.get_bag() == self.STRAIGHT:
 				target_bag = [1, 2][randint(0, 1)]
+
 			self.combo[target_bag] = 1
-			
+			# calculate how much time the PI should wait until polling for results
+			self.time_till_results = 5
+
 		elif self.selected_mode is self.ROUNDS:
 			target_bags = [randint(0, 3) * 1000 for _ in range(20)] # create list of 20 random numbers within range of bag numbers
 			target_bags = set(target_bags) # remove duplicates
 			target_bags = [bag//1000 for bag in target_bags] # remove 1000 that allowed the set to remain unordered
-			
-			if self.selected_difficulty == self.BEGINNER:
-				self.time_till_next = 4
-				# select the first two bags
-				self.combo[target_bags[0]] = 1
-				self.combo[target_bags[1]] = 1
-			elif self.selected_difficulty == self.INTERMEDIATE:
-				self.time_till_next = 3
-				# select first three bags
+
+			# get number of punches user selected
+			selected_punches = self.training_punches[self.punches_cursor] if self.selected_mode is self.TRAINING else self.rounds_punches[self.punches_cursor]
+
+			# determine number of punches user has to fit
+			if selected_punches >= 75:
+				self.combo = [1] * 4
+			elif selected_punches >= 50:
+				# select first three random bags
 				self.combo[target_bags[0]] = 1
 				self.combo[target_bags[1]] = 1
 				self.combo[target_bags[2]] = 1
+			else:
+				# select the first two random bags
+				self.combo[target_bags[0]] = 1
+				self.combo[target_bags[1]] = 1
+			
+			if self.selected_difficulty == self.BEGINNER:
+				self.time_till_next = 4
+				# calculate how much time the PI should wait until polling for results
+				self.time_till_results = sum(self.combo) * 5
+			elif self.selected_difficulty == self.INTERMEDIATE:
+				self.time_till_next = 3
+				# calculate how much time the PI should wait until polling for results
+				self.time_till_results = sum(self.combo) * 5
 			elif self.selected_difficulty == self.HARDCORE:
 				self.time_till_next = 3
-				# select all bags
-				self.combo = [1, 1, 1, 1]
+				# calculate how much time the PI should wait until polling for results
+				self.time_till_results = sum(self.combo) * 4
 			
 		# set and send the message
 		lookup = {1: self.cm.GREEN, 0: self.cm.BLACK}
-		self.cm.set_pads(*[lookup[val] for val in self.combo])
+
+		# convert time to ASCII value that represents the lowercase alphabets
+		ascii_symbol = chr(self.time_till_results + 97) if 26 >= self.time_till_results >= 0 else chr(97)
+
+		self.cm.set_pads(*[lookup[val] for val in self.combo], ascii_symbol)
 		
         
     
