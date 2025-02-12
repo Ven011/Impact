@@ -38,7 +38,9 @@ class Workout_manager:
 		self.punches_landed = 0
 		self.punches_taken = 0
 		self.punches_reached = False
-		self.combo = [0, 0, 0, 0] # indicated bags/pads that need to be hit (0 = no, 1 = yes)
+		self.combo = [0, 0, 0, 0] 		# indicated bags/pads that need to be hit (0 = no, 1 = yes)
+		self.time_till_next = 0 		# time to give user to perform a sit-up/ time between rounds 
+		self.time_till_results = 0
 
 		self.workout_thread = threading.Thread(target = self.run_workout)
 		self.workout_thread.start()
@@ -126,10 +128,13 @@ class Workout_manager:
 				# send punches every 4 seconds if the workout has been started
 				if not self.paused and not self.punches_reached:
 					self.send_punch()
-					sleep(4.1)
+					
+					# pause before polling results
+					sleep(self.time_till_results)
 					self.check_punch_results()
-					# 2 second break before next round
-					sleep(2)
+
+					# pause before next round of punches
+					sleep(self.time_till_next)
 				
 		except Exception as e:
 			print(f"Error in workout thread: {e}")
@@ -149,6 +154,7 @@ class Workout_manager:
 		# determine what pads to send punches
 		if self.selected_mode is self.TRAINING:
 			target_bag = 0
+			self.time_till_next = 5
 			
 			if self.get_bag() == self.ALL:
 				target_bag = randint(0, 3)
@@ -164,15 +170,18 @@ class Workout_manager:
 			target_bags = [bag//1000 for bag in target_bags] # remove 1000 that allowed the set to remain unordered
 			
 			if self.selected_difficulty == self.BEGINNER:
+				self.time_till_next = 4
 				# select the first two bags
 				self.combo[target_bags[0]] = 1
 				self.combo[target_bags[1]] = 1
 			elif self.selected_difficulty == self.INTERMEDIATE:
+				self.time_till_next = 3
 				# select first three bags
 				self.combo[target_bags[0]] = 1
 				self.combo[target_bags[1]] = 1
 				self.combo[target_bags[2]] = 1
 			elif self.selected_difficulty == self.HARDCORE:
+				self.time_till_next = 3
 				# select all bags
 				self.combo = [1, 1, 1, 1]
 			
