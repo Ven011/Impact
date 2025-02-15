@@ -1,4 +1,4 @@
-import threading
+enimport threading
 import traceback
 
 from time import time, sleep
@@ -93,7 +93,9 @@ class Workout_manager:
 	def pause_workout(self):
 		self.paused = True
 		# turn off pads
-		self.cm.set_pads(*[self.cm.BLACK]*4)
+		pad_info = [self.cm.BLACK]*4
+		pad_info.append('a')
+		self.cm.set_pads(*pad_info)
         
 	def resume_workout(self):
 		self.paused = False
@@ -104,7 +106,9 @@ class Workout_manager:
 		# reset punches landed and taken
 		self.punches_reached = False
 		# turn off pads
-		self.cm.set_pads(*[self.cm.BLACK]*4)
+		pad_info = [self.cm.BLACK]*4
+		pad_info.append('a')
+		self.cm.set_pads(*pad_info)
 
 	def reset_variables(self):
 		self.punches_landed = 0
