@@ -206,8 +206,10 @@ class Workout_manager:
 
 		# convert time to ASCII value that represents the lowercase alphabets
 		ascii_symbol = chr(self.time_till_results + 97) if 26 >= self.time_till_results >= 0 else chr(97)
-
-		self.cm.set_pads(*[lookup[val] for val in self.combo], ascii_symbol)
+		
+		pad_info = [lookup[val] for val in self.combo]
+		pad_info.append(ascii_symbol)
+		self.cm.set_pads(*pad_info)
 		
         
     
