@@ -130,7 +130,7 @@ class Workout_manager:
 					self.send_punch()
 					
 					# pause before polling results
-					sleep(self.time_till_results)
+					sleep(self.time_till_results + 0.5)
 					self.check_punch_results()
 
 					# pause before next round of punches
