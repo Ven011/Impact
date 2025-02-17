@@ -271,9 +271,12 @@ class workout_screen:
         self.taken.config(text=wm.get_taken())
         self.taken.place(relx=0.105, rely=0.79, anchor="center")
 
+	# automatically start the workout
+        self.play_action()
+
     def run(self, press_event: tk.Event):
         # check whether buttons have been pressed
-        if press_event is not None: 
+        if press_event is not None:
             for button in self.buttons: button.check_if_pressed(press_x=press_event.x, press_y=press_event.y)
 
         # display target punches
@@ -317,7 +320,7 @@ class workout_start_screen:
         self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
         self.time = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
         self.display_start_time = 0
-        self.display_time = 60 # number of seconds to show the screen
+        self.display_time = 30 # number of seconds to show the screen
         self.display_elapsed_time = 0
         self.prev_time = 0
 

@@ -1,9 +1,11 @@
 """
 	Manages serial communication between the Raspberry Pi and the "Master" Trinket
 	Outgoing Message Format:
-		- "M1C2C3C4C"
+		- "M1C2C3C4CTV"
 		- M = starting byte
 		- C = color to set pad (1, 2, 3, and 4) LED (R, G, or B for black)
+		- T = byte preceeding time representation
+		- V = Time byte ranging from 97 - 122 ASCII, lowercase alphabet, 26 letters, represents times between 0 and 26 seconds
 	Incoming Message Format:
 		- "M1S2S3S4S"
 		- M = starting byte
@@ -16,7 +18,7 @@ from serial import Serial
 from time import sleep
 
 class Comms_manager:
-	def __init__(self, port = "/dev/ttyACM0", baudrate = 9600):
+	def __init__(self, port = "/dev/ttyUSB0", baudrate = 9600):
 		self.ser = Serial(port, baudrate)
 		 
 		self.GREEN = 'G'
@@ -33,7 +35,6 @@ class Comms_manager:
 				self.ser.open()
 			except Exception as e:
 				print(e)
-		
 		
 		# message monitoring thread
 		self.monitor = threading.Thread(target=self.message_monitoring)
@@ -55,8 +56,8 @@ class Comms_manager:
 		except Exception as e:
 			print(f"Error in thread: {e}")
 		
-	def set_pads(self, pad1, pad2, pad3, pad4):
-		message = f"M1{pad1}2{pad2}3{pad3}4{pad4}"
+	def set_pads(self, pad1, pad2, pad3, pad4, report_by_time):
+		message = f"M1{pad1}2{pad2}3{pad3}4{pad4}T{report_by_time}"
 		if self.ser.write(bytes(message, "utf-8")):
 			print(f"{message} written successfully")
 			return 1

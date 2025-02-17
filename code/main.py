@@ -9,7 +9,7 @@ sleep(5)
 
 root = tk.Tk()
 root.geometry("800x480")
-#root.attributes("-fullscreen", True)
+root.attributes("-fullscreen", True)
 root.configure(bg="black")
 
 # screen image holder
@@ -39,14 +39,13 @@ manager = screen_manager(root, screen_holder)
 
 # show the main logo
 show_main_logo()
-
 # show the core machine logo
 root.after(LOGO_DURATION, show_core_logo)
 
+# start running the screens
 root.after((LOGO_DURATION*2), manager.handle_screens)
 
 # set bindings
 root.bind("<Button-1>", manager.handle_press)
 
-# set bindings
 root.mainloop()

@@ -27,7 +27,7 @@ class Workout_manager:
 
 		# number of punches for each mode
 		self.training_punches = list(range(10, 101, 10))
-		self.rounds_punches = list(range(0, 201, 25))
+		self.rounds_punches = list(range(25, 201, 25))
 		self.punches_cursor = 0
 
 		# workout variables
@@ -38,7 +38,9 @@ class Workout_manager:
 		self.punches_landed = 0
 		self.punches_taken = 0
 		self.punches_reached = False
-		self.combo = [0, 0, 0, 0] # indicated bags/pads that need to be hit (0 = no, 1 = yes)
+		self.combo = [0, 0, 0, 0] 		# indicated bags/pads that need to be hit (0 = no, 1 = yes)
+		self.time_till_next = 0 		# time to give user to perform a sit-up/ time between rounds 
+		self.time_till_results = 0
 
 		self.workout_thread = threading.Thread(target = self.run_workout)
 		self.workout_thread.start()
@@ -91,7 +93,9 @@ class Workout_manager:
 	def pause_workout(self):
 		self.paused = True
 		# turn off pads
-		self.cm.set_pads(*[self.cm.BLACK]*4)
+		pad_info = [self.cm.BLACK]*4
+		pad_info.append('a')
+		self.cm.set_pads(*pad_info)
         
 	def resume_workout(self):
 		self.paused = False
@@ -102,7 +106,9 @@ class Workout_manager:
 		# reset punches landed and taken
 		self.punches_reached = False
 		# turn off pads
-		self.cm.set_pads(*[self.cm.BLACK]*4)
+		pad_info = [self.cm.BLACK]*4
+		pad_info.append('a')
+		self.cm.set_pads(*pad_info)
 
 	def reset_variables(self):
 		self.punches_landed = 0
@@ -126,10 +132,13 @@ class Workout_manager:
 				# send punches every 4 seconds if the workout has been started
 				if not self.paused and not self.punches_reached:
 					self.send_punch()
-					sleep(4.1)
+					
+					# pause before polling results
+					sleep(self.time_till_results + 0.5)
 					self.check_punch_results()
-					# 2 second break before next round
-					sleep(2)
+
+					# pause before next round of punches
+					sleep(self.time_till_next)
 				
 		except Exception as e:
 			print(f"Error in workout thread: {e}")
@@ -140,7 +149,7 @@ class Workout_manager:
 	def check_punch_results(self):
 		if not self.paused:
 			self.punches_landed += sum(self.cm.hit_status[0:4])
-			self.punches_taken += sum(self.combo[0:4]) - sum(self.cm.hit_status[0:4])
+			self.punches_taken += abs(sum(self.combo[0:4]) - sum(self.cm.hit_status[0:4]))
 			self.punches_reached = True if (self.punches_landed + self.punches_taken) >= self.get_punches_value() else False
         
 	def send_punch(self):
@@ -149,6 +158,7 @@ class Workout_manager:
 		# determine what pads to send punches
 		if self.selected_mode is self.TRAINING:
 			target_bag = 0
+			self.time_till_next = 5
 			
 			if self.get_bag() == self.ALL:
 				target_bag = randint(0, 3)
@@ -156,29 +166,54 @@ class Workout_manager:
 				target_bag = [0, 3][randint(0, 1)]
 			elif self.get_bag() == self.STRAIGHT:
 				target_bag = [1, 2][randint(0, 1)]
+
 			self.combo[target_bag] = 1
-			
+			# calculate how much time the PI should wait until polling for results
+			self.time_till_results = 5
+
 		elif self.selected_mode is self.ROUNDS:
 			target_bags = [randint(0, 3) * 1000 for _ in range(20)] # create list of 20 random numbers within range of bag numbers
 			target_bags = set(target_bags) # remove duplicates
 			target_bags = [bag//1000 for bag in target_bags] # remove 1000 that allowed the set to remain unordered
-			
-			if self.selected_difficulty == self.BEGINNER:
-				# select the first two bags
-				self.combo[target_bags[0]] = 1
-				self.combo[target_bags[1]] = 1
-			elif self.selected_difficulty == self.INTERMEDIATE:
-				# select first three bags
+
+			# get number of punches user selected
+			selected_punches = self.training_punches[self.punches_cursor] if self.selected_mode is self.TRAINING else self.rounds_punches[self.punches_cursor]
+
+			# determine number of punches user has to fit
+			if selected_punches >= 75:
+				self.combo = [1] * 4
+			elif selected_punches >= 50:
+				# select first three random bags
 				self.combo[target_bags[0]] = 1
 				self.combo[target_bags[1]] = 1
 				self.combo[target_bags[2]] = 1
+			else:
+				# select the first two random bags
+				self.combo[target_bags[0]] = 1
+				self.combo[target_bags[1]] = 1
+			
+			if self.selected_difficulty == self.BEGINNER:
+				self.time_till_next = 4
+				# calculate how much time the PI should wait until polling for results
+				self.time_till_results = sum(self.combo) * 5
+			elif self.selected_difficulty == self.INTERMEDIATE:
+				self.time_till_next = 3
+				# calculate how much time the PI should wait until polling for results
+				self.time_till_results = sum(self.combo) * 5
 			elif self.selected_difficulty == self.HARDCORE:
-				# select all bags
-				self.combo = [1, 1, 1, 1]
+				self.time_till_next = 3
+				# calculate how much time the PI should wait until polling for results
+				self.time_till_results = sum(self.combo) * 4
 			
 		# set and send the message
 		lookup = {1: self.cm.GREEN, 0: self.cm.BLACK}
-		self.cm.set_pads(*[lookup[val] for val in self.combo])
+
+		# convert time to ASCII value that represents the lowercase alphabets
+		ascii_symbol = chr(self.time_till_results + 97) if 26 >= self.time_till_results >= 0 else chr(97)
+		
+		pad_info = [lookup[val] for val in self.combo]
+		pad_info.append(ascii_symbol)
+		self.cm.set_pads(*pad_info)
 		
         
     
