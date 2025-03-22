@@ -158,7 +158,7 @@ class Workout_manager:
 		# determine what pads to send punches
 		if self.selected_mode is self.TRAINING:
 			target_bag = 0
-			self.time_till_next = 5
+			self.time_till_next = 3
 			
 			if self.get_bag() == self.ALL:
 				target_bag = randint(0, 3)
@@ -169,7 +169,7 @@ class Workout_manager:
 
 			self.combo[target_bag] = 1
 			# calculate how much time the PI should wait until polling for results
-			self.time_till_results = 5
+			self.time_till_results = 4
 
 		elif self.selected_mode is self.ROUNDS:
 			target_bags = [randint(0, 3) * 1000 for _ in range(20)] # create list of 20 random numbers within range of bag numbers
@@ -193,17 +193,17 @@ class Workout_manager:
 				self.combo[target_bags[1]] = 1
 			
 			if self.selected_difficulty == self.BEGINNER:
-				self.time_till_next = 4
+				self.time_till_next = 3
 				# calculate how much time the PI should wait until polling for results
-				self.time_till_results = sum(self.combo) * 5
+				self.time_till_results = 3
 			elif self.selected_difficulty == self.INTERMEDIATE:
-				self.time_till_next = 3
+				self.time_till_next = 2
 				# calculate how much time the PI should wait until polling for results
-				self.time_till_results = sum(self.combo) * 5
+				self.time_till_results = 2
 			elif self.selected_difficulty == self.HARDCORE:
-				self.time_till_next = 3
+				self.time_till_next = 2
 				# calculate how much time the PI should wait until polling for results
-				self.time_till_results = sum(self.combo) * 4
+				self.time_till_results = 1
 			
 		# set and send the message
 		lookup = {1: self.cm.GREEN, 0: self.cm.BLACK}
