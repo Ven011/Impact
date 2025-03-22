@@ -335,8 +335,6 @@ class workout_start_screen:
     def prepare(self):
         # initialize screen variables
         self.display_elapsed_time = 0
-        self.display_start_time = time()
-        self.prev_time = self.display_start_time
 
         set_image(self.holder, self.images["workout_start_screen"])
 
@@ -345,6 +343,10 @@ class workout_start_screen:
 
         self.time.config(text=self.display_time)
         self.time.place(relx=0.71, rely=0.57, anchor="center")
+
+        self.display_start_time = time()
+        self.prev_time = self.display_start_time
+        self.forget_text = False
 
     def run(self, press_event: tk.Event):
         _ = press_event
@@ -355,9 +357,10 @@ class workout_start_screen:
             self.target.place_forget()
             self.time.place_forget()
             self.set_screen("workout")
+            self.forget_text = True
 
         # update the countdown time
-        if time() - self.prev_time >= 1:
+        if time() - self.prev_time >= 1 and not self.forget_text:
             self.display_elapsed_time += 1
             self.prev_time = time()
             time_left = self.display_time - self.display_elapsed_time

@@ -47,12 +47,12 @@ class Comms_manager:
 	def message_monitoring(self):
 		try:
 			while not self.fire_manager:
-				# find starting byte
-				if self.ser.read().decode() == "M":
-					sleep(0.1)
-					msg = self.ser.read(8).decode()
-					self.process_incoming_message(msg) if len(msg) == 8 else 0
+				# wait for full main trinket message
+				if self.ser.in_waiting == 9:
+					msg = self.ser.read(9).decode()
+					self.process_incoming_message(msg[1:len(msg)]) if len(msg) == 9 and msg[0] == "M" else 0
 					print(self.hit_status)
+					print(msg)
 		except Exception as e:
 			print(f"Error in thread: {e}")
 		

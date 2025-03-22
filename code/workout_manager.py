@@ -179,7 +179,7 @@ class Workout_manager:
 			# get number of punches user selected
 			selected_punches = self.training_punches[self.punches_cursor] if self.selected_mode is self.TRAINING else self.rounds_punches[self.punches_cursor]
 
-			# determine number of punches user has to fit
+			# determine number of punches user has to hit
 			if selected_punches >= 75:
 				self.combo = [1] * 4
 			elif selected_punches >= 50:
