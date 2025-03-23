@@ -208,11 +208,21 @@ class Workout_manager:
 		# set and send the message
 		lookup = {1: self.cm.GREEN, 0: self.cm.BLACK}
 
+		whole_ascii = None;
+		deci_ascii = None;
+
 		# convert time to ASCII value that represents the lowercase alphabets
-		ascii_symbol = chr(self.time_till_results + 97) if 26 >= self.time_till_results >= 0 else chr(97)
+		if type(self.time_till_results) is float:
+			whole_ascii = chr(int(self.time_till_results) + 97) if 26 >= int(self.time_till_results) >= 0 else chr(97)
+			decimal_as_whole = int((self.time_till_results - int(self.time_till_results))*10)
+			deci_ascii = chr(decimal_as_whole + 97) if 9 >= decimal_as_whole >= 0 else chr(97)
+		else:
+			whole_ascii = chr(self.time_till_results + 97) if 26 >= self.time_till_results >= 0 else chr(97)
+			deci_ascii = chr(97)
 		
 		pad_info = [lookup[val] for val in self.combo]
-		pad_info.append(ascii_symbol)
+		pad_info.append(whole_ascii)
+		pad_info.append(deci_ascii)
 		self.cm.set_pads(*pad_info)
 		
         
