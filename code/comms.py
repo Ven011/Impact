@@ -1,11 +1,12 @@
 """
 	Manages serial communication between the Raspberry Pi and the "Master" Trinket
 	Outgoing Message Format:
-		- "M1C2C3C4CTV"
+		- "M1C2C3C4CTVDW"
 		- M = starting byte
 		- C = color to set pad (1, 2, 3, and 4) LED (R, G, or B for black)
 		- T = byte preceeding time representation
-		- V = Time byte ranging from 97 - 122 ASCII, lowercase alphabet, 26 letters, represents times between 0 and 26 seconds
+		- V = Time byte ranging from 97 - 122 ASCII, lowercase alphabet, 26 letters, represents whole number times between 0 and 26 seconds
+  		- W = Time byte ranging from 97 - 106, 10 letters, represents decimal portion of the whole number times
 	Incoming Message Format:
 		- "M1S2S3S4S"
 		- M = starting byte
@@ -56,8 +57,8 @@ class Comms_manager:
 		except Exception as e:
 			print(f"Error in thread: {e}")
 		
-	def set_pads(self, pad1, pad2, pad3, pad4, report_by_time):
-		message = f"M1{pad1}2{pad2}3{pad3}4{pad4}T{report_by_time}"
+	def set_pads(self, pad1, pad2, pad3, pad4, report_by_time_whole, report_by_time_deci):
+		message = f"M1{pad1}2{pad2}3{pad3}4{pad4}T{report_by_time_whole}D{report_by_time_deci}"
 		if self.ser.write(bytes(message, "utf-8")):
 			print(f"{message} written successfully")
 			return 1
