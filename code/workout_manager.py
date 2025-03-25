@@ -215,7 +215,7 @@ class Workout_manager:
 		# set which pads will light up
 		for idx in range(len(combo)): main_trinket_msg |= (self.combo[idx]<<(4-idx)+3)
 		
-		self.cm.set_pads(main_trinket_msg)
+		self.cm.set_pads(chr(main_trinket_msg))
 		
         
     
