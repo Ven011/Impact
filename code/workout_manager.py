@@ -108,6 +108,7 @@ class Workout_manager:
 		# turn off pads
 		pad_info = [self.cm.BLACK]*4
 		pad_info.append('a')
+		pad_info.append('a')
 		self.cm.set_pads(*pad_info)
 
 	def reset_variables(self):
