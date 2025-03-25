@@ -212,19 +212,10 @@ class Workout_manager:
 				self.time_till_results = 1.5
 				main_trinket_msg |= 3 # sets the round type to hardcore
 
-<<<<<<< HEAD
 		# set which pads will light up
-		for idx in range(len(combo)): main_trinket_msg |= (self.combo[idx]<<(4-idx)+3)
+		for idx in range(len(self.combo)): main_trinket_msg |= (self.combo[idx]<<(4-idx)+3)
 		
 		self.cm.set_pads(chr(main_trinket_msg))
-=======
-		# convert time to ASCII value that represents the lowercase alphabets
-		ascii_symbol = chr(self.time_till_results + 97) if 26 >= self.time_till_results >= 0 else chr(97)
-		
-		pad_info = [lookup[val] for val in self.combo]
-		pad_info.append(ascii_symbol)
-		self.cm.set_pads(*pad_info)
->>>>>>> parent of 5d9f1e9 (decimal support for result times)
 		
         
     
