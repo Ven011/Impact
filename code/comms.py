@@ -56,8 +56,8 @@ class Comms_manager:
 		except Exception as e:
 			print(f"Error in thread: {e}")
 		
-	def set_pads(self, pad1, pad2, pad3, pad4, round_type):
-		message = f"M1{pad1}2{pad2}3{pad3}4{pad4}R{round_type}"
+	def set_pads(self, msg):
+		message = f"M{msg}"
 		if self.ser.write(bytes(message, "utf-8")):
 			print(f"{message} written successfully")
 			return 1
