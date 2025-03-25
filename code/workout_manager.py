@@ -204,7 +204,7 @@ class Workout_manager:
 			elif self.selected_difficulty == self.HARDCORE:
 				self.time_till_next = 2
 				# calculate how much time the PI should wait until polling for results
-				self.time_till_results = 1.5
+				self.time_till_results = 2
 			
 		# set and send the message
 		lookup = {1: self.cm.GREEN, 0: self.cm.BLACK}
