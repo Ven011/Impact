@@ -154,7 +154,6 @@ class Workout_manager:
         
 	def send_punch(self):
 		self.combo = [0, 0, 0, 0]
-		main_trinket_msg = 0
 
 		# determine what pads to send punches
 		if self.selected_mode is self.TRAINING:
@@ -170,9 +169,7 @@ class Workout_manager:
 
 			self.combo[target_bag] = 1
 			# calculate how much time the PI should wait until polling for results
-			self.time_till_results = 4.5
-
-			main_trinket_msg |= 0 # sets the round type to training
+			self.time_till_results = 4
 
 		elif self.selected_mode is self.ROUNDS:
 			target_bags = [randint(0, 3) * 1000 for _ in range(20)] # create list of 20 random numbers within range of bag numbers
@@ -199,27 +196,35 @@ class Workout_manager:
 				self.time_till_next = 3
 				# calculate how much time the PI should wait until polling for results
 				self.time_till_results = 3.5
-				# set the round type value to be sent to the trinkets
-				main_trinket_msg |= 1 # sets the round type to beginner
 			elif self.selected_difficulty == self.INTERMEDIATE:
 				self.time_till_next = 2
 				# calculate how much time the PI should wait until polling for results
 				self.time_till_results = 2.5
-				main_trinket_msg |= 2 # sets the round type to intermediate
 			elif self.selected_difficulty == self.HARDCORE:
 				self.time_till_next = 2
 				# calculate how much time the PI should wait until polling for results
 				self.time_till_results = 1.5
-				main_trinket_msg |= 3 # sets the round type to hardcore
+			
+		# set and send the message
+		lookup = {1: self.cm.GREEN, 0: self.cm.BLACK}
 
-		# set which pads will light up
-		for idx in range(len(self.combo)): main_trinket_msg |= (self.combo[idx]<<(4-idx)+3)
+		whole_ascii = None
+		deci_ascii = None
+
+		# convert time to ASCII value that represents the lowercase alphabets
+		if type(self.time_till_results) is float:
+			whole_ascii = chr(int(self.time_till_results) + 97) if 26 >= int(self.time_till_results) >= 0 else chr(97)
+			decimal_as_whole = int((self.time_till_results - int(self.time_till_results))*10)
+			deci_ascii = chr(decimal_as_whole + 97) if 9 >= decimal_as_whole >= 0 else chr(97)
+		else:
+			whole_ascii = chr(self.time_till_results + 97) if 26 >= self.time_till_results >= 0 else chr(97)
+			deci_ascii = chr(97)
 		
-		self.cm.set_pads(chr(main_trinket_msg))
+		pad_info = [lookup[val] for val in self.combo]
+		pad_info.append(whole_ascii)
+		pad_info.append(deci_ascii)
+		self.cm.set_pads(*pad_info)
 		
         
     
             
-
-
-
