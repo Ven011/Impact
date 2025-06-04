@@ -47,11 +47,11 @@ class Comms_manager:
 
 	def monitor_supervisor(self):
 		while True:
-	    		self.monitor = threading.Thread(target=self.message_monitoring)
-        		self.monitor.start()
-		        self.monitor.join()  # Wait for the thread to finish
-		        print("Message Monitoring Thread exited, restarting ...")
-			time.sleep(0.1)  # restarting
+			self.monitor = threading.Thread(target=self.message_monitoring)
+			self.monitor.start()
+			self.monitor.join()  # Wait for the thread to finish
+			print("Message Monitoring Thread exited, restarting ...")
+			sleep(0.1)  # restarting
 			
 	def message_monitoring(self):
 		try:
