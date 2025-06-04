@@ -38,13 +38,20 @@ class Comms_manager:
 			except Exception as e:
 				print(e)
 		
-		# message monitoring thread
-		self.monitor = threading.Thread(target=self.message_monitoring)
-		self.monitor.start()
+		# Start the message monitor supervisor
+		threading.Thread(target=self.monitor_supervisor).start()
 		
 	def process_incoming_message(self, msg):
 		translator = {"H":1, "N":0}
 		self.hit_status = [translator[msg[1+msg.index(str(val))]] for val in range(1, 5)]
+
+	def monitor_supervisor(self):
+		while True:
+	    		self.monitor = threading.Thread(target=self.message_monitoring)
+        		self.monitor.start()
+		        self.monitor.join()  # Wait for the thread to finish
+		        print("Message Monitoring Thread exited, restarting ...")
+			time.sleep(0.1)  # restarting
 			
 	def message_monitoring(self):
 		try:
