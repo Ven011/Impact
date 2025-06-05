@@ -57,17 +57,25 @@ class Comms_manager:
 		try:
 			while not self.fire_manager:
 				# wait for full main trinket message
-				if self.ser.in_waiting == 9:
-					msg = ""
-					for _ in range(9):
-						m = self.ser.read(1)
-						try:
-							msg += m.decode()
-						except UnicodeDecodeError:
-							msg += "N"  # assume pad not hit if decode fails	
-					self.process_incoming_message(msg[1:len(msg)]) if len(msg) == 9 and msg[0] == "M" else 0
-					print(self.hit_status)
-					print(msg)
+				if self.ser.in_waiting:
+					if self.ser.read(1) == b'M':
+						raw = self.ser.read(8) # read the next 8 bytes
+				        	print(f"Raw bytes: {raw}")  # print bytes
+				
+				        	msg = ""
+				        	for m in raw:
+				        		try:
+				                		msg += m.decode()
+				        		except UnicodeDecodeError:
+								print("Decode Error...")
+				                		msg += 'N'
+				
+				        	if len(msg) == 8 and '1' in msg and '2' in msg and '3' in msg and '4' in msg:
+				        		self.process_incoming_message(msg)
+				        		print(self.hit_status)
+				        		print(f"Decoded message: {msg}")
+						else:
+							self.hit_status = [0, 0, 0, 0]
 		except Exception as e:
 			print(f"Error in thread: {e}")
 		
