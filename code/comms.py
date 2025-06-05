@@ -57,18 +57,25 @@ class Comms_manager:
 		try:
 			while not self.fire_manager:
 				# wait for full main trinket message
-				if self.ser.in_waiting:
+				if self.ser.in_waiting == 9:
 					if self.ser.read(1) == b'M':
-						raw = self.ser.read(8) # read the next 8 bytes
-						print(f"Raw bytes: {raw}")  # print bytes
+						# raw = self.ser.read(8) # read the next 8 bytes
+						# print(f"Raw bytes: {raw}")  # print bytes
 				
+						# msg = ""
+						# for m in raw:
+						# 	try:
+						# 		msg += raw[].decode()
+						# 	except UnicodeDecodeError:
+						# 		print("Decode Error...")
+						# 		msg += 'N'
 						msg = ""
-						for m in raw:
+						for _ in range(8):
 							try:
-								msg += m.decode()
-							except UnicodeDecodeError:
-								print("Decode Error...")
-								msg += 'N'
+								msg += self.ser.read(1).decode()
+							except Exceptions as e:
+								print(f"Decode error: {e}, assigning default value")
+								msg += "N"
 			
 						if len(msg) == 8 and '1' in msg and '2' in msg and '3' in msg and '4' in msg:
 							self.process_incoming_message(msg)
