@@ -58,10 +58,13 @@ class Comms_manager:
 			while not self.fire_manager:
 				# wait for full main trinket message
 				if self.ser.in_waiting == 9:
+					msg = ""
 					for _ in range(9):
 						m = self.ser.read(1)
-						print(m)
-					#self.process_incoming_message(msg[1:len(msg)]) if len(msg) == 9 and msg[0] == "M" else 0
+						if m == b'\xff': # invalid response from trinket
+							m = b'N' # default to pad not hit
+						msg += m.decode()	
+					self.process_incoming_message(msg[1:len(msg)]) if len(msg) == 9 and msg[0] == "M" else 0
 					print(self.hit_status)
 					print(msg)
 		except Exception as e:
