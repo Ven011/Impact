@@ -320,7 +320,7 @@ class workout_start_screen:
         self.target = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
         self.time = tk.Label(self.holder, font=("Helvetica", 80, "bold"), anchor="center", fg="white", bg="black")
         self.display_start_time = 0
-        self.display_time = 30 # number of seconds to show the screen
+        self.display_time = 15 # number of seconds to show the screen
         self.display_elapsed_time = 0
         self.prev_time = 0
 
