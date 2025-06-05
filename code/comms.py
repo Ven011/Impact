@@ -61,7 +61,7 @@ class Comms_manager:
 					for _ in range(9):
 						m = self.ser.read(1)
 						print(m)
-					self.process_incoming_message(msg[1:len(msg)]) if len(msg) == 9 and msg[0] == "M" else 0
+					#self.process_incoming_message(msg[1:len(msg)]) if len(msg) == 9 and msg[0] == "M" else 0
 					print(self.hit_status)
 					print(msg)
 		except Exception as e:
