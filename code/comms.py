@@ -65,7 +65,7 @@ class Comms_manager:
 						msg = ""
 						for m in raw:
 							try:
-									msg += m.decode()
+								msg += m.decode()
 							except UnicodeDecodeError:
 								print("Decode Error...")
 								msg += 'N'
