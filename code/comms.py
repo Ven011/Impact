@@ -61,9 +61,10 @@ class Comms_manager:
 					msg = ""
 					for _ in range(9):
 						m = self.ser.read(1)
-						if m == b'\xff': # invalid response from trinket
-							m = b'N' # default to pad not hit
-						msg += m.decode()	
+						try:
+							msg += m.decode()
+						except UnicodeDecodeError:
+							msg += "N"  # assume pad not hit if decode fails	
 					self.process_incoming_message(msg[1:len(msg)]) if len(msg) == 9 and msg[0] == "M" else 0
 					print(self.hit_status)
 					print(msg)
