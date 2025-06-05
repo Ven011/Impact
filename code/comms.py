@@ -72,8 +72,12 @@ class Comms_manager:
 						msg = ""
 						for _ in range(8):
 							try:
-								msg += self.ser.read(1).decode()
-							except Exceptions as e:
+								raw = self.ser.read(1)
+								if raw in [b"\0xff", b"\x00"]:
+									msg += "N"
+								else:
+									msg += raw.decode()
+							except Exception as e:
 								print(f"Decode error: {e}, assigning default value")
 								msg += "N"
 			
